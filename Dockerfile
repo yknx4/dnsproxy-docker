@@ -12,7 +12,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 
 RUN apt update && apt install -y tar curl && \
     mkdir release && \
-    curl -L "https://github.com/AdguardTeam/dnsproxy/releases/download/${UPSTREAM_RELEASE_TAG}/dnsproxy-linux-amd64-${UPSTREAM_RELEASE_TAG}.tar.gz" | tar xvz --strip 1 -C ./release
+    curl -L "https://github.com/AdguardTeam/dnsproxy/releases/download/${UPSTREAM_RELEASE_TAG}/dnsproxy-linux-amd64-${UPSTREAM_RELEASE_TAG}.tar.gz" | tar xvz -C ./release --wildcards --no-anchored 'dnsproxy' --transform='s/.*\///'
 
 FROM debian:${DEBIAN_VERSION}
 
@@ -33,7 +33,7 @@ COPY --from=download /tini /tini
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 
-COPY --from=download /tmp/release/linux-amd64/dnsproxy /usr/local/bin/dnsproxy
+COPY --from=download /tmp/release/dnsproxy /usr/local/bin/dnsproxy
 
 RUN setcap CAP_NET_BIND_SERVICE+eip /usr/local/bin/dnsproxy
 
