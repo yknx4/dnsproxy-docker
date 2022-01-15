@@ -1,0 +1,33 @@
+name: Build Image
+on:
+  workflow_dispatch:
+  schedule:
+    # The "*" (#42, asterisk) character has special semantics in YAML, so this
+    # string has to be quoted.
+    - cron: '0 */2 * * *'
+jobs:
+  fetch-tags:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'npm'
+
+      - name: Fetch Tags
+        run: ts-node build.ts
+
+      - id: set-matrix
+        run: echo "::set-output name=matrix::$(cat ${{env.GITHUB_WORKSPACE}}/matrix.json)"
+
+  build:
+    needs: fetch-tags
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.fetch-tags.outputs.matrix)}}
+    steps:
+    - run: echo ${{ matrix.tag }}
