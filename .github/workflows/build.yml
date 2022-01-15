@@ -57,7 +57,7 @@ jobs:
           file: ./Dockerfile
           build-args: |
             UPSTREAM_RELEASE_TAG=${{ matrix.tag }}
-          push: false
+          push: true
           tags: yknx94/dnsproxy:${{ matrix.tag }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
