@@ -4,7 +4,7 @@ on:
   schedule:
     # The "*" (#42, asterisk) character has special semantics in YAML, so this
     # string has to be quoted.
-    - cron: '0 */2 * * *'
+    - cron: '0 0 * * *'
 jobs:
   fetch-tags:
     runs-on: ubuntu-latest
@@ -17,6 +17,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           cache: 'npm'
+          node-version: lts/*
+
+      - run: npm install
 
       - name: Fetch Tags
         run: ts-node build.ts
