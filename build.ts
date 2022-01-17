@@ -23,13 +23,13 @@ async function main(owner: string, repo: string, arch: string) {
       console.log(`Building DnsProxy ${release.name}.`)
       finalTags.push({
         tag: release.tag_name,
-        arch,
+        arch: arch.includes("linux") ? 'amd64' : arch,
         asset: release.assets.find(a => a.name.includes(arch))?.browser_download_url
       })
     }
   }
 
-  await writeFileSync(`${OUTPUT_FOLDER}/matrix.json`, JSON.stringify({ include: finalTags }))
+  await writeFileSync(`${OUTPUT_FOLDER}/matrix.json`, JSON.stringify({ include: finalTags.filter(t => typeof t.asset === 'string' && t.asset !== "") }))
 }
 
 main(process.argv[2], process.argv[3], process.argv[4]).catch(e => {
