@@ -1,4 +1,4 @@
-name: Build Dnsproxy
+name: Build AdguardTeam Dnsproxy
 on:
   workflow_dispatch:
   schedule:
@@ -42,9 +42,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          key: ${{ runner.os }}-dnsproxy-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-
+            ${{ runner.os }}-dnsproxy-buildx-
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
@@ -58,7 +58,7 @@ jobs:
           build-args: |
             BINARY_NAME=dnsproxy
             ASSET_URL=${{ matrix.asset }}
-          push: false
+          push: true
           tags: yknx94/dnsproxy:${{ matrix.tag }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max

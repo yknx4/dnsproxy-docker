@@ -1,4 +1,4 @@
-name: Build Dnsproxy
+name: Build DNSCrypt Proxy
 on:
   workflow_dispatch:
   schedule:
@@ -42,9 +42,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          key: ${{ runner.os }}-dnscrypt-proxy-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-
+            ${{ runner.os }}-dnscrypt-proxy-buildx-
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
@@ -58,7 +58,7 @@ jobs:
           build-args: |
             ASSET_URL=${{ matrix.asset }}
             BINARY_NAME=dnscrypt-proxy
-          push: false
+          push: true
           tags: yknx94/dnscrypt-proxy:${{ matrix.tag }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
