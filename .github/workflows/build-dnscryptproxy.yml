@@ -22,7 +22,7 @@ jobs:
       - run: npm install
 
       - name: Fetch Tags
-        run: ./node_modules/.bin/ts-node build.ts "DNSCrypt" "dnscrypt-proxy" "x86_64"
+        run: ./node_modules/.bin/ts-node build.ts "DNSCrypt" "dnscrypt-proxy" "linux_x86_64"
 
       - id: set-matrix
         run: echo "::set-output name=matrix::$(cat ${GITHUB_WORKSPACE}/matrix.json)"
